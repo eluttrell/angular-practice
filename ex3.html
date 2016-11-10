@@ -5,23 +5,36 @@ Then when he clicks a "Submit" button, it displays the year they were born. Hint
 -->
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <title>What Year Were You Born?</title>
     <script src="angular.js"></script>
     <script>
-    // Write JS code here
+        // Write JS code here
+        var app = angular.module('my-app', []);
+        app.controller('MainController',
+            function($scope) {
+                $scope.date = new Date();
+                $scope.yearBorn = function() {
+                    $scope.message = 'You were born in ' + ($scope.date.getFullYear() - $scope.age);
+                    $scope.age = '';
+                };
+            });
     </script>
-  </head>
-  <body>
-  </body>
+</head>
+
+<body>
+    <div ng-app="my-app" ng-controller="MainController">
+        How old are you?<br>
+        <form ng-submit="yearBorn()">
+            <input type="text" ng-model="age">
+            <button>Submit</button><br> {{message}}
+        </form>
+    </div>
+</body>
+
 </html>
-
-
-
-
-
-
 
 
 
