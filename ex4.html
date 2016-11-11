@@ -16,49 +16,60 @@ Hints at the bottom of this file.
 -->
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <title>Fight or Flight</title>
     <script src="angular.js"></script>
     <script>
-    var app = angular.module('my-app', []);
-    app.controller('MainController', function($scope) {
-      $scope.dragonHealth = 20;
-      $scope.heroHealth = 10;
-
-      $scope.fight = function() {
-        var num = Math.random();
-        if (num > 0.5) {
-          $scope.dragonHealth -= 5;
-        } else {
-          $scope.heroHealth -= 5;
-        }
-        checkWinner();
-      };
-
-      $scope.flight = function() {
-        $scope.heroHealth += 2;
-        checkWinner();
-      };
-
-      function checkWinner() {
-        if ($scope.dragonHealth <= 0) {
-          $scope.message = 'You win!';
-        }
-        if ($scope.heroHealth <= 0){
-          $scope.message = 'You lose!';
-        }
-      }
-    });
+        var app = angular.module('fight-or-flight', []);
+        app.controller('fFController',
+            function($scope) {
+                $scope.restart = function() {
+                    $scope.heroHealth = 10;
+                    $scope.dragonHealth = 20;
+                    $scope.flightCount = 0;
+                };
+                $scope.restart();
+                $scope.fight = function() {
+                    var num = Math.random();
+                    if (num > 0.5) {
+                        $scope.hit = true;
+                        $scope.dragonHealth -= 5;
+                    } else {
+                        $scope.hit = false;
+                        $scope.heroHealth -= 5;
+                    }
+                };
+                $scope.flight = function() {
+                    $scope.heroHealth += 2;
+                    $scope.flightCount += 1;
+                }
+            });
     </script>
-  </head>
-  <body ng-app="my-app" ng-controller="MainController">
-    Hero: {{heroHealth}}<br>
-    Dragon: {{dragonHealth}}
-    {{ message }}
-    <button ng-click="fight()">Fight</button>
-    <button ng-click="flight()">Flight</button>
-  </body>
+</head>
+
+<body>
+    <div ng-app="fight-or-flight" ng-controller="fFController">
+        Hero health: {{heroHealth}} Dragon health: {{dragonHealth}}
+        <br><br>
+        <div class="win-banner" ng-show="dragonHealth <= 0">
+            You have defeated the dragon!
+        </div>
+        <div class="lose-banner" ng-show="heroHealth <= 0">
+            You have been brutally slaughtered by the mighty and magnificent dragon, you slag.
+        </div>
+        <div class="coward-banner" ng-show="flightCount >= 3">
+          "You have fled like the coward you are! The mighty dragon turns away in disgust."
+        </div>
+        <button ng-click="fight()" ng-hide="heroHealth <= 0 || dragonHealth <= 0 || flightCount >= 3">Die Foul Beast!</button><br>
+
+        <button ng-click="flight()" ng-hide="heroHealth <= 0 || dragonHealth <= 0 || flightCount >= 3">Shit! Flee!</button>
+
+        <button ng-click="restart()" ng-show="heroHealth <= 0 || dragonHealth <= 0 || flightCount >= 3">Play again?</button>
+    </div>
+</body>
+
 </html>
 
 
